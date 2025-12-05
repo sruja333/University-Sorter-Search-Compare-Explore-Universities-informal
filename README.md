@@ -24,6 +24,8 @@ Fully deployed and accessible online
 Optimized frontend build
 Fast loading and mobile-friendly
 
+<br> <br> ec2 instance: <a href> http://13.126.57.98:3000/ </a> (pwd:habibi)
+
 🛠️ Tech Stack
 Frontend
 HTML, CSS, JavaScript
