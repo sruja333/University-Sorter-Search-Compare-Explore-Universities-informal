@@ -1,73 +1,36 @@
-# Welcome to your Lovable project
+🎓 University Sorter — Search, Compare & Explore Universities
 
-## Project info
+A fun side-project that turned into a fully functional university comparison tool.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+🚀 Overview
 
-## How can I edit this code?
+University Sorter is a searchable, sortable, filter-friendly university comparison website.
+Originally built as a playful project for a friend with personalized inside jokes, it evolved into a complete web application with modern UI features, cloud deployment, and data management.
 
-There are several ways of editing your application.
+This project demonstrates my skills in frontend development, animations, authentication, UI/UX, and deploying a production-ready web app.
 
-**Use Lovable**
+✨ Features
+🔍 Advanced Table Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Dynamic search
+Click-to-sort column sorting
+Responsive layout
+Add new universities for comparison
+Login System
 
-Changes made via Lovable will be committed automatically to this repo.
+🌐 Cloud Deployment
 
-**Use your preferred IDE**
+Fully deployed and accessible online
+Optimized frontend build
+Fast loading and mobile-friendly
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+🛠️ Tech Stack
+Frontend
+HTML, CSS, JavaScript
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+CSV File of data
 
-Follow these steps:
+Custom animations
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Responsive design
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
