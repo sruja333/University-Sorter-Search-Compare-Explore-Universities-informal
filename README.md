@@ -37,7 +37,12 @@ Responsive design
 
 <img width="668" height="590" alt="image" src="https://github.com/user-attachments/assets/3f5fe64b-5396-4434-97e9-b44637db630e" />
 
+
+
 <img width="1284" height="830" alt="image" src="https://github.com/user-attachments/assets/91d2eb6d-58fe-4c41-a4fb-a0a1eaab2dbd" />
+
+
+
 
 <img width="1285" height="805" alt="image" src="https://github.com/user-attachments/assets/f86bbd97-1533-447a-a1c6-1328749a20da" />
 
