@@ -3,6 +3,7 @@ import { University, universities as initialUniversities } from "@/data/universi
 import UniversityTable from "./UniversityTable";
 import SnakeAnimation from "./SnakeAnimation";
 import HeartAnimation from "./HeartAnimation";
+import ThemeToggle from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 
@@ -52,10 +53,11 @@ const MainPage = ({ username, onLogout }: MainPageProps) => {
               </h1>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <span className="text-sm md:text-base text-muted-foreground">
                 Hey, <span className="font-semibold text-foreground">{username}</span>! 💕
               </span>
+              <ThemeToggle />
               <Button
                 onClick={onLogout}
                 variant="outline"
