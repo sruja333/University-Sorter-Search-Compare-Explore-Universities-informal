@@ -18,10 +18,10 @@ const SnakeAnimation = ({ onShowHeart }: SnakeAnimationProps) => {
         {/* Snake body */}
         <div className={`${isHovering ? "animate-snake-wiggle" : "animate-float"}`}>
           <svg
-            width="80"
-            height="80"
+            width="100"
+            height="100"
             viewBox="0 0 100 100"
-            className="drop-shadow-lg"
+            className="drop-shadow-xl"
           >
             {/* Snake body curve */}
             <path
