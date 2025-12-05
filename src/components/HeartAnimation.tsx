@@ -12,15 +12,15 @@ const HeartAnimation = ({ onComplete }: HeartAnimationProps) => {
     // Start showing
     setTimeout(() => setShow(true), 100);
 
-    // Start fade out after 4.5s
+    // Start fade out after 3s
     const fadeTimer = setTimeout(() => {
       setFadeOut(true);
-    }, 4500);
+    }, 3000);
 
-    // Complete after 5s
+    // Complete after 3.5s
     const completeTimer = setTimeout(() => {
       onComplete();
-    }, 5000);
+    }, 3500);
 
     return () => {
       clearTimeout(fadeTimer);
@@ -66,9 +66,9 @@ const HeartAnimation = ({ onComplete }: HeartAnimationProps) => {
           >
             <defs>
               <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="hsl(350, 85%, 60%)" />
-                <stop offset="50%" stopColor="hsl(330, 70%, 55%)" />
-                <stop offset="100%" stopColor="hsl(0, 85%, 60%)" />
+                <stop offset="0%" stopColor="hsl(0, 85%, 45%)" />
+                <stop offset="50%" stopColor="hsl(355, 80%, 40%)" />
+                <stop offset="100%" stopColor="hsl(0, 90%, 35%)" />
               </linearGradient>
               <filter id="glow">
                 <feGaussianBlur stdDeviation="4" result="coloredBlur" />
