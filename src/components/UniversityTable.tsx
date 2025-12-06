@@ -10,25 +10,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ChevronUp, ChevronDown, Plus, X } from "lucide-react";
+import { Search, ChevronUp, ChevronDown, Plus } from "lucide-react";
 import AddUniversityDialog from "./AddUniversityDialog";
-import ColumnFilter from "./ColumnFilter";
 
 interface UniversityTableProps {
   universities: University[];
   onAddUniversity: (university: Omit<University, "id">) => void;
-  onDeleteUniversity: (id: string) => void;
 }
 
 type SortKey = keyof University;
 type SortOrder = "asc" | "desc";
 
-const UniversityTable = ({ universities, onAddUniversity, onDeleteUniversity }: UniversityTableProps) => {
+const UniversityTable = ({ universities, onAddUniversity }: UniversityTableProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("university");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [columnFilters, setColumnFilters] = useState<Record<string, Set<string>>>({});
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -39,37 +36,12 @@ const UniversityTable = ({ universities, onAddUniversity, onDeleteUniversity }: 
     }
   };
 
-  const handleFilterChange = (columnKey: string, selectedValues: Set<string>) => {
-    setColumnFilters((prev) => ({
-      ...prev,
-      [columnKey]: selectedValues,
-    }));
-  };
-
-  // Get all unique values for each column (for filter options)
-  const columnValues = useMemo(() => {
-    const values: Record<string, string[]> = {};
-    columns.forEach((col) => {
-      values[col.key] = universities.map((uni) => uni[col.key]);
-    });
-    return values;
-  }, [universities]);
-
   const filteredAndSortedData = useMemo(() => {
-    let filtered = universities.filter((uni) =>
+    const filtered = universities.filter((uni) =>
       Object.values(uni).some((value) =>
         value.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
-
-    // Apply column filters
-    Object.entries(columnFilters).forEach(([columnKey, selectedValues]) => {
-      if (selectedValues.size > 0) {
-        filtered = filtered.filter((uni) =>
-          selectedValues.has(uni[columnKey as SortKey])
-        );
-      }
-    });
 
     return filtered.sort((a, b) => {
       const aValue = a[sortKey];
@@ -77,7 +49,7 @@ const UniversityTable = ({ universities, onAddUniversity, onDeleteUniversity }: 
       const comparison = aValue.localeCompare(bValue);
       return sortOrder === "asc" ? comparison : -comparison;
     });
-  }, [universities, searchQuery, sortKey, sortOrder, columnFilters]);
+  }, [universities, searchQuery, sortKey, sortOrder]);
 
   const SortIcon = ({ column }: { column: SortKey }) => {
     if (sortKey !== column) {
@@ -124,8 +96,6 @@ const UniversityTable = ({ universities, onAddUniversity, onDeleteUniversity }: 
           <Table>
             <TableHeader>
               <TableRow className="bg-secondary/50 hover:bg-secondary/50">
-                {/* Delete column header */}
-                <TableHead className="w-10"></TableHead>
                 {columns.map((column) => (
                   <TableHead
                     key={column.key}
@@ -135,12 +105,6 @@ const UniversityTable = ({ universities, onAddUniversity, onDeleteUniversity }: 
                     <div className="flex items-center gap-1 font-semibold text-foreground">
                       {column.label}
                       <SortIcon column={column.key} />
-                      <ColumnFilter
-                        columnKey={column.key}
-                        values={columnValues[column.key] || []}
-                        selectedValues={columnFilters[column.key] || new Set()}
-                        onFilterChange={handleFilterChange}
-                      />
                     </div>
                   </TableHead>
                 ))}
@@ -150,7 +114,7 @@ const UniversityTable = ({ universities, onAddUniversity, onDeleteUniversity }: 
               {filteredAndSortedData.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length + 1}
+                    colSpan={columns.length}
                     className="text-center py-12 text-muted-foreground"
                   >
                     No universities found 😢
@@ -164,17 +128,6 @@ const UniversityTable = ({ universities, onAddUniversity, onDeleteUniversity }: 
                       index % 2 === 0 ? "bg-background" : "bg-secondary/20"
                     }`}
                   >
-                    {/* Delete button */}
-                    <TableCell className="w-10 p-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => onDeleteUniversity(uni.id)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
                     <TableCell className="font-medium text-foreground">
                       {uni.university}
                     </TableCell>

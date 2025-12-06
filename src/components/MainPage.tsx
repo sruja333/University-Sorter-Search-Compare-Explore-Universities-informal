@@ -3,7 +3,6 @@ import { University, universities as initialUniversities } from "@/data/universi
 import UniversityTable from "./UniversityTable";
 import SnakeAnimation from "./SnakeAnimation";
 import HeartAnimation from "./HeartAnimation";
-import ThemeToggle from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 
@@ -26,10 +25,6 @@ const MainPage = ({ username, onLogout }: MainPageProps) => {
   const handleAddUniversity = useCallback((newUni: Omit<University, "id">) => {
     const id = Date.now().toString();
     setUniversities((prev) => [...prev, { ...newUni, id }]);
-  }, []);
-
-  const handleDeleteUniversity = useCallback((id: string) => {
-    setUniversities((prev) => prev.filter((uni) => uni.id !== id));
   }, []);
 
   const handleShowHeart = useCallback(() => {
@@ -61,7 +56,6 @@ const MainPage = ({ username, onLogout }: MainPageProps) => {
               <span className="text-sm md:text-base text-muted-foreground">
                 Hey, <span className="font-semibold text-foreground">{username}</span>! 💕
               </span>
-              <ThemeToggle />
               <Button
                 onClick={onLogout}
                 variant="outline"
@@ -89,7 +83,6 @@ const MainPage = ({ username, onLogout }: MainPageProps) => {
           <UniversityTable
             universities={universities}
             onAddUniversity={handleAddUniversity}
-            onDeleteUniversity={handleDeleteUniversity}
           />
         </main>
 
