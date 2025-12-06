@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { University, universities as initialUniversities } from "@/data/universities";
 import UniversityTable from "./UniversityTable";
 import SnakeAnimation from "./SnakeAnimation";
@@ -11,9 +11,19 @@ interface MainPageProps {
   onLogout: () => void;
 }
 
+const getStorageKey = (username: string) => `universities_${username}`;
+
 const MainPage = ({ username, onLogout }: MainPageProps) => {
-  // Each user gets their own data (stored in component state)
-  const [universities, setUniversities] = useState<University[]>(initialUniversities);
+  // Load user's saved data from localStorage, or use defaults
+  const [universities, setUniversities] = useState<University[]>(() => {
+    const saved = localStorage.getItem(getStorageKey(username));
+    return saved ? JSON.parse(saved) : initialUniversities;
+  });
+
+  // Save to localStorage whenever universities change
+  useEffect(() => {
+    localStorage.setItem(getStorageKey(username), JSON.stringify(universities));
+  }, [universities, username]);
   const [showHeart, setShowHeart] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
