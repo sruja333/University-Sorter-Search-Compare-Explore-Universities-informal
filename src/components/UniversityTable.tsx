@@ -10,22 +10,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ChevronUp, ChevronDown, Plus } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Search, ChevronUp, ChevronDown, Plus, X, Filter } from "lucide-react";
 import AddUniversityDialog from "./AddUniversityDialog";
 
 interface UniversityTableProps {
   universities: University[];
   onAddUniversity: (university: Omit<University, "id">) => void;
+  onDeleteUniversity: (id: string) => void;
 }
 
 type SortKey = keyof University;
 type SortOrder = "asc" | "desc";
+type Filters = Partial<Record<SortKey, Set<string>>>;
 
-const UniversityTable = ({ universities, onAddUniversity }: UniversityTableProps) => {
+const UniversityTable = ({ universities, onAddUniversity, onDeleteUniversity }: UniversityTableProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("university");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [filters, setFilters] = useState<Filters>({});
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -36,12 +45,50 @@ const UniversityTable = ({ universities, onAddUniversity }: UniversityTableProps
     }
   };
 
+  const getUniqueValues = (key: SortKey) => {
+    const values = new Set(universities.map((uni) => uni[key]));
+    return Array.from(values).sort();
+  };
+
+  const toggleFilter = (column: SortKey, value: string) => {
+    setFilters((prev) => {
+      const currentSet = prev[column] || new Set<string>();
+      const newSet = new Set(currentSet);
+      if (newSet.has(value)) {
+        newSet.delete(value);
+      } else {
+        newSet.add(value);
+      }
+      if (newSet.size === 0) {
+        const { [column]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [column]: newSet };
+    });
+  };
+
+  const clearFilter = (column: SortKey) => {
+    setFilters((prev) => {
+      const { [column]: _, ...rest } = prev;
+      return rest;
+    });
+  };
+
   const filteredAndSortedData = useMemo(() => {
-    const filtered = universities.filter((uni) =>
+    let filtered = universities.filter((uni) =>
       Object.values(uni).some((value) =>
         value.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
+
+    // Apply column filters
+    Object.entries(filters).forEach(([column, selectedValues]) => {
+      if (selectedValues && selectedValues.size > 0) {
+        filtered = filtered.filter((uni) =>
+          selectedValues.has(uni[column as SortKey])
+        );
+      }
+    });
 
     return filtered.sort((a, b) => {
       const aValue = a[sortKey];
@@ -49,7 +96,7 @@ const UniversityTable = ({ universities, onAddUniversity }: UniversityTableProps
       const comparison = aValue.localeCompare(bValue);
       return sortOrder === "asc" ? comparison : -comparison;
     });
-  }, [universities, searchQuery, sortKey, sortOrder]);
+  }, [universities, searchQuery, sortKey, sortOrder, filters]);
 
   const SortIcon = ({ column }: { column: SortKey }) => {
     if (sortKey !== column) {
@@ -96,15 +143,62 @@ const UniversityTable = ({ universities, onAddUniversity }: UniversityTableProps
           <Table>
             <TableHeader>
               <TableRow className="bg-secondary/50 hover:bg-secondary/50">
+                <TableHead className="w-10"></TableHead>
                 {columns.map((column) => (
                   <TableHead
                     key={column.key}
-                    className={`cursor-pointer select-none transition-colors hover:bg-secondary ${column.className || ""}`}
-                    onClick={() => handleSort(column.key)}
+                    className={`select-none transition-colors ${column.className || ""}`}
                   >
                     <div className="flex items-center gap-1 font-semibold text-foreground">
-                      {column.label}
+                      <span
+                        className="cursor-pointer hover:text-primary transition-colors"
+                        onClick={() => handleSort(column.key)}
+                      >
+                        {column.label}
+                      </span>
                       <SortIcon column={column.key} />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button className="ml-1 p-1 hover:bg-accent rounded transition-colors">
+                            <Filter
+                              className={`w-3 h-3 ${
+                                filters[column.key]?.size ? "text-primary" : "opacity-50"
+                              }`}
+                            />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-56 p-3 bg-card border-border z-50" align="start">
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium">Filter {column.label}</span>
+                              {filters[column.key]?.size ? (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-6 px-2 text-xs"
+                                  onClick={() => clearFilter(column.key)}
+                                >
+                                  Clear
+                                </Button>
+                              ) : null}
+                            </div>
+                            <div className="max-h-48 overflow-y-auto space-y-1">
+                              {getUniqueValues(column.key).map((value) => (
+                                <label
+                                  key={value}
+                                  className="flex items-center gap-2 cursor-pointer hover:bg-accent/50 p-1 rounded text-sm"
+                                >
+                                  <Checkbox
+                                    checked={filters[column.key]?.has(value) || false}
+                                    onCheckedChange={() => toggleFilter(column.key, value)}
+                                  />
+                                  <span className="truncate">{value}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
                   </TableHead>
                 ))}
@@ -114,7 +208,7 @@ const UniversityTable = ({ universities, onAddUniversity }: UniversityTableProps
               {filteredAndSortedData.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={columns.length + 1}
                     className="text-center py-12 text-muted-foreground"
                   >
                     No universities found 😢
@@ -128,6 +222,15 @@ const UniversityTable = ({ universities, onAddUniversity }: UniversityTableProps
                       index % 2 === 0 ? "bg-background" : "bg-secondary/20"
                     }`}
                   >
+                    <TableCell className="w-10 p-2">
+                      <button
+                        onClick={() => onDeleteUniversity(uni.id)}
+                        className="p-1 hover:bg-destructive/20 rounded transition-colors group"
+                        title="Remove row"
+                      >
+                        <X className="w-4 h-4 text-muted-foreground group-hover:text-destructive" />
+                      </button>
+                    </TableCell>
                     <TableCell className="font-medium text-foreground">
                       {uni.university}
                     </TableCell>
