@@ -27,6 +27,10 @@ const MainPage = ({ username, onLogout }: MainPageProps) => {
     setUniversities((prev) => [...prev, { ...newUni, id }]);
   }, []);
 
+  const handleDeleteUniversity = useCallback((id: string) => {
+    setUniversities((prev) => prev.filter((uni) => uni.id !== id));
+  }, []);
+
   const handleShowHeart = useCallback(() => {
     setShowHeart(true);
   }, []);
@@ -83,6 +87,7 @@ const MainPage = ({ username, onLogout }: MainPageProps) => {
           <UniversityTable
             universities={universities}
             onAddUniversity={handleAddUniversity}
+            onDeleteUniversity={handleDeleteUniversity}
           />
         </main>
 
